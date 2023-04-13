@@ -11,6 +11,8 @@ namespace UniversityAPI.Model
         {
             
         }
+
+
         public virtual DbSet<ClassAllocateTB> ClassAllocateTB { get; set; }
         public virtual DbSet<CourseAssignTB> CourseAssignTB { get; set; }
         public virtual DbSet<CourseTB> CourseTB { get; set; }

@@ -82,11 +82,15 @@ namespace UniversityAPI.Controllers
             var user = await Authenticate(login);
             if (user != null)
             {
+                var userRoles = await userManager.GetRolesAsync(user);
+
+                var role = userRoles.FirstOrDefault();
                 var token = await Generate(user);
                 return Ok(new
                 {
                     token,
                     User=user.UserName,
+                    roles = role
                 });
             }
             return Unauthorized("Authentication Falied");
@@ -99,7 +103,7 @@ namespace UniversityAPI.Controllers
 
             var authClaims = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Fullname),
+                new Claim(ClaimTypes.NameIdentifier, user.UserName),
                 new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
                 
 
@@ -132,11 +136,14 @@ namespace UniversityAPI.Controllers
             return null;
         }
 
+
         [Authorize(Roles = UserRole.Admin)]
         [HttpGet]
         public ActionResult Get()
         {
-            return Ok("ok");
+
+            var re = context.DayTB.ToList();
+            return Ok(re);
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using UniversityAPI.Authentication;
-using WebApplication2.Models;
+using UniversityAPI.Model;
 
 namespace UniversityAPI.Model
 {
@@ -12,177 +12,100 @@ namespace UniversityAPI.Model
             
         }
 
+        public DbSet<StudentTB> StudentTb { get; set; }
+        public DbSet<DepartmentTB> DepartmentTb { get; set; }
+        public DbSet<AllocateClass> AllocateClassTb{ get; set; }
+        public DbSet<Course> CourseTb { get; set; }
+        public DbSet<CourseAssignTeacher> CourseAssignTb { get; set; }
+        public DbSet<Day> DayTb { get; set; }
+        public DbSet<Designation> DesignationTb { get; set; }
+        public DbSet<EnrollCourse> EnrollCourseTb { get; set; }
+        public DbSet<GradeLetter> GradeLetterTb { get; set; }
+        public DbSet<Room> RoomTb { get; set; }
+        public DbSet<Semester> SemesterTb { get; set; }
+        public DbSet<StudentResult> StudentResultTb { get; set; }
+        public DbSet<Teacher> TeacherTb { get; set; }
 
-        public virtual DbSet<ClassAllocateTB> ClassAllocateTB { get; set; }
-        public virtual DbSet<CourseAssignTB> CourseAssignTB { get; set; }
-        public virtual DbSet<CourseTB> CourseTB { get; set; }
-        public virtual DbSet<DayTB> DayTB { get; set; }
-        public virtual DbSet<DepartmentTB> DepartmentTB { get; set; }
-        public virtual DbSet<DesignationTB> DesignationTB { get; set; }
-        public virtual DbSet<EnrollCourseTB> EnrollCourseTB { get; set; }
-        public virtual DbSet<GradeLetterTB> GradeLetterTB { get; set; }
-        public virtual DbSet<RoomNoTB> RoomNoTB { get; set; }
-        public virtual DbSet<SemesterTB> SemesterTB { get; set; }
-        public virtual DbSet<StudentResultTB> StudentResultTB { get; set; }
-        public virtual DbSet<StudentTB> StudentTB { get; set; }
-        public virtual DbSet<TeacherTB> TeacherTB { get; set; }
-    
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        
+
+        protected override void OnModelCreating(ModelBuilder builder)
         {
-            modelBuilder.Entity<CourseTB>()
-                .Property(e => e.CourseName)
-                .IsUnicode(false);
+            foreach (var relationship in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
+            {
+                relationship.DeleteBehavior = DeleteBehavior.Restrict;
+            }
+            builder.Entity<StudentTB>()
+                .HasOne(_ => _.DepartmentTB)
+                .WithMany(a => a.StudentTB)
+                .HasForeignKey(p => p.DepartmentId);
 
-            modelBuilder.Entity<CourseTB>()
-                .Property(e => e.CourseCode)
-                .IsUnicode(false);
+            builder.Entity<Teacher>()
+                .HasOne(_ => _.DepartmentTB)
+                .WithMany(c => c.Teacher)
+                .HasForeignKey(a => a.DepartmentId);
+            builder.Entity<Teacher>()
+                .HasOne(_ => _.Designation)
+                .WithMany(c => c.Teacher)
+                .HasForeignKey(a => a.DesignationId);
+            builder.Entity<EnrollCourse>()
+                .HasOne(_ => _.StudentTB)
+                .WithMany(c => c.EnrollCourse)
+                .HasForeignKey(a => a.StudentId);
+            builder.Entity<EnrollCourse>()
+                .HasOne(_ => _.Course)
+                .WithMany(c => c.EnrollCourse)
+                .HasForeignKey(a => a.CourseId);
+            builder.Entity<StudentResult>()
+                .HasOne(_ => _.StudentTB)
+                .WithMany(c => c.StudentResult)
+                .HasForeignKey(a => a.StudentId);
+            builder.Entity<StudentResult>()
+                .HasOne(_ => _.Course)
+                .WithMany(c => c.StudentResult)
+                .HasForeignKey(a => a.CourseId);
+            builder.Entity<StudentResult>()
+                .HasOne(_ => _.GradeLetter)
+                .WithMany(c => c.StudentResult)
+                .HasForeignKey(a => a.GradeLetterId);
+            builder.Entity<CourseAssignTeacher>()
+                .HasOne(_ => _.DepartmentTB)
+                .WithMany(c => c.CourseAssignTeacher)
+                .HasForeignKey(a => a.DepartmentId);
 
-            modelBuilder.Entity<CourseTB>()
-                .Property(e => e.Credit)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<CourseTB>()
-                .Property(e => e.Description)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<CourseTB>()
-                .HasMany(e => e.StudentResultTB)
-                .WithOne(e => e.CourseTB)
-                .HasForeignKey(e => e.CourseId);
-
-            modelBuilder.Entity<DayTB>()
-                .Property(e => e.DayName)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<DayTB>()
-                .HasMany(e => e.ClassAllocateTB)
-                .WithOne(e => e.DayTB)
-                .HasForeignKey(e => e.DayId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<DepartmentTB>()
-                .Property(e => e.DepartmentCode)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<DepartmentTB>()
-                .Property(e => e.DepartmentName)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<DepartmentTB>()
-                .HasMany(e => e.ClassAllocateTB)
-                .WithOne(e => e.DepartmentTB)
-                .HasForeignKey(e => e.DepartmentId);
-
-            modelBuilder.Entity<DepartmentTB>()
-                .HasMany(e => e.CourseTB)
-                .WithOne(e => e.DepartmentTB)
-                .HasForeignKey(e => e.DepartmentId);
-
-            modelBuilder.Entity<DepartmentTB>()
-                .HasMany(e => e.StudentTB)
-                .WithOne(e => e.DepartmentTB)
-                .HasForeignKey(e => e.DepartmentId);
-
-            modelBuilder.Entity<DepartmentTB>()
-                .HasMany(e => e.TeacherTB)
-                .WithOne(e => e.DepartmentTB)
-                .HasForeignKey(e => e.DepartmentId);
-
-            modelBuilder.Entity<DesignationTB>()
-                .Property(e => e.DesignationName)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<DesignationTB>()
-                .HasMany(e => e.TeacherTB)
-                .WithOne(e => e.DesignationTB)
-                .HasForeignKey(e => e.DesignationId);
-
-            modelBuilder.Entity<GradeLetterTB>()
-                .Property(e => e.GradeLetterMarkes)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<GradeLetterTB>()
-                .Property(e => e.GradePoint)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<GradeLetterTB>()
-                .HasMany(e => e.StudentResultTB)
-                .WithOne(e => e.GradeLetterTB)
-                .HasForeignKey(e => e.GradeLetterId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<RoomNoTB>()
-                .Property(e => e.RoomNo)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<RoomNoTB>()
-                .HasMany(e => e.ClassAllocateTB)
-                .WithOne(e => e.RoomNoTB)
-                .HasForeignKey(e => e.RoomId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<SemesterTB>()
-                .Property(e => e.SemesterName)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<SemesterTB>()
-                .HasMany(e => e.CourseTB)
-                .WithOne(e => e.SemesterTB)
-                .HasForeignKey(e => e.SemesterId);
-
-            modelBuilder.Entity<StudentTB>()
-                .Property(e => e.StudentName)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<StudentTB>()
-                .Property(e => e.Email)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<StudentTB>()
-                .Property(e => e.ContactNo)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<StudentTB>()
-                .Property(e => e.Address)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<StudentTB>()
-                .Property(e => e.RegistrationNo)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<StudentTB>()
-                .HasMany(e => e.EnrollCourseTB)
-                .WithOne(e => e.StudentTB)
-                .HasForeignKey(e => e.StudentId);
-
-            modelBuilder.Entity<TeacherTB>()
-                .Property(e => e.TeacherName)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<TeacherTB>()
-                .Property(e => e.Address)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<TeacherTB>()
-                .Property(e => e.Email)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<TeacherTB>()
-                .Property(e => e.ContactNo)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<TeacherTB>()
-                .HasMany(e => e.CourseAssignTB)
-                .WithOne(e => e.TeacherTB)
-                .HasForeignKey(e => e.TeacherId);
-
-
-            base.OnModelCreating(modelBuilder);
+            builder.Entity<CourseAssignTeacher>()
+                .HasOne(_ => _.Teacher)
+                .WithMany(c => c.CourseAssignTeacher)
+                .HasForeignKey(a => a.TeacherId);
+            builder.Entity<CourseAssignTeacher>()
+                .HasOne(_ => _.Course)
+                .WithMany(c => c.CourseAssignTeacher)
+                .HasForeignKey(a => a.CourseId);
+                
+            builder.Entity<Course>()
+                .HasOne(_ => _.DepartmentTB)
+                .WithMany(c => c.Course)
+                .HasForeignKey(a => a.DepartmentId);
+            builder.Entity<Course>()
+                .HasOne(_ => _.Semester)
+                .WithMany(c => c.Course)
+                .HasForeignKey(a => a.SemesterId);
+            builder.Entity<AllocateClass>()
+                .HasOne(_ => _.DepartmentTB)
+                .WithMany(c => c.AllocateClass)
+                .HasForeignKey(a => a.DepartmentId);
+            builder.Entity<AllocateClass>()
+                .HasOne(_ => _.Room)
+                .WithMany(c => c.AllocateClass)
+                .HasForeignKey(a => a.RoomId);
+            builder.Entity<AllocateClass>()
+                .HasOne(_ => _.Course)
+                .WithMany(c => c.AllocateClass)
+                .HasForeignKey(a => a.CourseId);
+            builder.Entity<AllocateClass>()
+                .HasOne(_ => _.Day)
+                .WithMany(c => c.AllocateClass)
+                .HasForeignKey(a => a.DayId);
+            base.OnModelCreating( builder);
         }
-
-        // protected override void OnModelCreating(ModelBuilder builder)
-        // {
-        //     base.OnModelCreating( builder);
-        // }
-    }
+    } 
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UniversityAPI.Model;
 
@@ -11,9 +12,10 @@ using UniversityAPI.Model;
 namespace UniversityAPI.Migrations
 {
     [DbContext(typeof(StudentDB))]
-    partial class StudentDBModelSnapshot : ModelSnapshot
+    [Migration("20230415180924_date update")]
+    partial class dateupdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

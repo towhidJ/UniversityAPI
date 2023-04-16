@@ -137,13 +137,6 @@ namespace UniversityAPI.Controllers
         }
 
 
-        [Authorize(Roles = UserRole.Admin)]
-        [HttpGet]
-        public ActionResult Get()
-        {
-
-            var re = context.DayTB.ToList();
-            return Ok(re);
-        }
+       
     }
 }

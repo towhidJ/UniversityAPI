@@ -1,4 +1,4 @@
-namespace WebApplication2.Models
+namespace UniversityAPI.Model
 {
     using System;
     using System.Collections.Generic;
@@ -6,19 +6,16 @@ namespace WebApplication2.Models
     using System.ComponentModel.DataAnnotations.Schema;
     
 
-    [Table("EnrollCourseTB")]
-    public partial class EnrollCourseTB
+    public  class StudentResult
     {
-        
+        [Key]
         public int Id { get; set; }
 
         public int StudentId { get; set; }
-
+        public StudentTB StudentTB { get; set; }
         public int CourseId { get; set; }
-
-        [Column(TypeName = "date")]
-        public DateTime Date { get; set; }
-
-        public virtual StudentTB StudentTB { get; set; }
+        public  Course Course { get; set; }
+        public int GradeLetterId { get; set; }
+        public GradeLetter GradeLetter { get; set; }
     }
 }

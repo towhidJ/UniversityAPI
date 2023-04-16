@@ -12,14 +12,14 @@ using UniversityAPI.Model;
 namespace UniversityAPI.Migrations
 {
     [DbContext(typeof(StudentDB))]
-    [Migration("20230412160921_Init db")]
-    partial class Initdb
+    [Migration("20230415073144_Add Database model and relation")]
+    partial class AddDatabasemodelandrelation
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.16")
+                .HasAnnotation("ProductVersion", "6.0.13")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -226,7 +226,49 @@ namespace UniversityAPI.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("WebApplication2.Models.ClassAllocateTB", b =>
+            modelBuilder.Entity("UniversityAPI.Model.AllocateClass", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int?>("CourseId")
+                        .IsRequired()
+                        .HasColumnType("int");
+
+                    b.Property<int?>("DayId")
+                        .IsRequired()
+                        .HasColumnType("int");
+
+                    b.Property<int?>("DepartmentId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("FromTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("RoomId")
+                        .IsRequired()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ToTime")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseId");
+
+                    b.HasIndex("DayId");
+
+                    b.HasIndex("DepartmentId");
+
+                    b.HasIndex("RoomId");
+
+                    b.ToTable("AllocateClassTb");
+                });
+
+            modelBuilder.Entity("UniversityAPI.Model.Course", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -237,36 +279,37 @@ namespace UniversityAPI.Migrations
                     b.Property<int>("Action")
                         .HasColumnType("int");
 
-                    b.Property<int>("CourseId")
-                        .HasColumnType("int");
+                    b.Property<string>("CourseCode")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
-                    b.Property<int>("DayId")
-                        .HasColumnType("int");
+                    b.Property<string>("CourseName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<float>("Credit")
+                        .HasColumnType("real");
 
                     b.Property<int>("DepartmentId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("FromTime")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RoomId")
+                    b.Property<int>("SemesterId")
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("ToTime")
-                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DayId");
-
                     b.HasIndex("DepartmentId");
 
-                    b.HasIndex("RoomId");
+                    b.HasIndex("SemesterId");
 
-                    b.ToTable("ClassAllocateTB");
+                    b.ToTable("CourseTb");
                 });
 
-            modelBuilder.Entity("WebApplication2.Models.CourseAssignTB", b =>
+            modelBuilder.Entity("UniversityAPI.Model.CourseAssignTeacher", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -285,62 +328,16 @@ namespace UniversityAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TeacherId");
-
-                    b.ToTable("CourseAssignTB");
-                });
-
-            modelBuilder.Entity("WebApplication2.Models.CourseTB", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int?>("Action")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CourseCode")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<string>("CourseName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<string>("Credit")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<int>("DepartmentId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<int>("SemesterId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
+                    b.HasIndex("CourseId");
 
                     b.HasIndex("DepartmentId");
 
-                    b.HasIndex("SemesterId");
+                    b.HasIndex("TeacherId");
 
-                    b.ToTable("CourseTB");
+                    b.ToTable("CourseAssignTb");
                 });
 
-            modelBuilder.Entity("WebApplication2.Models.DayTB", b =>
+            modelBuilder.Entity("UniversityAPI.Model.Day", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -350,16 +347,14 @@ namespace UniversityAPI.Migrations
 
                     b.Property<string>("DayName")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("DayTB");
+                    b.ToTable("DayTb");
                 });
 
-            modelBuilder.Entity("WebApplication2.Models.DepartmentTB", b =>
+            modelBuilder.Entity("UniversityAPI.Model.DepartmentTB", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -369,22 +364,18 @@ namespace UniversityAPI.Migrations
 
                     b.Property<string>("DepartmentCode")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DepartmentName")
                         .IsRequired()
-                        .HasMaxLength(150)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(150)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("DepartmentTB");
+                    b.ToTable("DepartmentTb");
                 });
 
-            modelBuilder.Entity("WebApplication2.Models.DesignationTB", b =>
+            modelBuilder.Entity("UniversityAPI.Model.Designation", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -394,16 +385,14 @@ namespace UniversityAPI.Migrations
 
                     b.Property<string>("DesignationName")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("DesignationTB");
+                    b.ToTable("DesignationTb");
                 });
 
-            modelBuilder.Entity("WebApplication2.Models.EnrollCourseTB", b =>
+            modelBuilder.Entity("UniversityAPI.Model.EnrollCourse", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -415,19 +404,21 @@ namespace UniversityAPI.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Date")
-                        .HasColumnType("date");
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("StudentId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CourseId");
+
                     b.HasIndex("StudentId");
 
-                    b.ToTable("EnrollCourseTB");
+                    b.ToTable("EnrollCourseTb");
                 });
 
-            modelBuilder.Entity("WebApplication2.Models.GradeLetterTB", b =>
+            modelBuilder.Entity("UniversityAPI.Model.GradeLetter", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -437,22 +428,14 @@ namespace UniversityAPI.Migrations
 
                     b.Property<string>("GradeLetterMarkes")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(30)");
-
-                    b.Property<string>("GradePoint")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("GradeLetterTB");
+                    b.ToTable("GradeLetterTb");
                 });
 
-            modelBuilder.Entity("WebApplication2.Models.RoomNoTB", b =>
+            modelBuilder.Entity("UniversityAPI.Model.Room", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -462,16 +445,14 @@ namespace UniversityAPI.Migrations
 
                     b.Property<string>("RoomNo")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("RoomNoTB");
+                    b.ToTable("RoomTb");
                 });
 
-            modelBuilder.Entity("WebApplication2.Models.SemesterTB", b =>
+            modelBuilder.Entity("UniversityAPI.Model.Semester", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -481,16 +462,14 @@ namespace UniversityAPI.Migrations
 
                     b.Property<string>("SemesterName")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("SemesterTB");
+                    b.ToTable("SemesterTb");
                 });
 
-            modelBuilder.Entity("WebApplication2.Models.StudentResultTB", b =>
+            modelBuilder.Entity("UniversityAPI.Model.StudentResult", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -513,10 +492,12 @@ namespace UniversityAPI.Migrations
 
                     b.HasIndex("GradeLetterId");
 
-                    b.ToTable("StudentResultTB");
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("StudentResultTb");
                 });
 
-            modelBuilder.Entity("WebApplication2.Models.StudentTB", b =>
+            modelBuilder.Entity("UniversityAPI.Model.StudentTB", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -526,48 +507,37 @@ namespace UniversityAPI.Migrations
 
                     b.Property<string>("Address")
                         .IsRequired()
-                        .HasMaxLength(150)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(150)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ContactNo")
                         .IsRequired()
-                        .HasMaxLength(14)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(14)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("DepartmentId")
                         .HasColumnType("int");
 
                     b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(150)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("RegisterDate")
-                        .HasColumnType("date");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("RegistrationNo")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("StudentName")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("DepartmentId");
 
-                    b.ToTable("StudentTB");
+                    b.ToTable("StudentTb");
                 });
 
-            modelBuilder.Entity("WebApplication2.Models.TeacherTB", b =>
+            modelBuilder.Entity("UniversityAPI.Model.Teacher", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -577,15 +547,12 @@ namespace UniversityAPI.Migrations
 
                     b.Property<string>("Address")
                         .IsRequired()
-                        .HasMaxLength(250)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(250)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ContactNo")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(20)");
+                        .HasMaxLength(14)
+                        .HasColumnType("nvarchar(14)");
 
                     b.Property<double>("CreditToBeTaken")
                         .HasColumnType("float");
@@ -597,19 +564,14 @@ namespace UniversityAPI.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(80)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(80)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("ReminingCredit")
+                    b.Property<double>("RemainingCredit")
                         .HasColumnType("float");
 
                     b.Property<string>("TeacherName")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -617,7 +579,7 @@ namespace UniversityAPI.Migrations
 
                     b.HasIndex("DesignationId");
 
-                    b.ToTable("TeacherTB");
+                    b.ToTable("TeacherTb");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -671,172 +633,221 @@ namespace UniversityAPI.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("WebApplication2.Models.ClassAllocateTB", b =>
+            modelBuilder.Entity("UniversityAPI.Model.AllocateClass", b =>
                 {
-                    b.HasOne("WebApplication2.Models.DayTB", "DayTB")
-                        .WithMany("ClassAllocateTB")
+                    b.HasOne("UniversityAPI.Model.Course", "Course")
+                        .WithMany("AllocateClass")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("UniversityAPI.Model.Day", "Day")
+                        .WithMany("AllocateClass")
                         .HasForeignKey("DayId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("WebApplication2.Models.DepartmentTB", "DepartmentTB")
-                        .WithMany("ClassAllocateTB")
+                    b.HasOne("UniversityAPI.Model.DepartmentTB", "DepartmentTB")
+                        .WithMany("AllocateClass")
                         .HasForeignKey("DepartmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("WebApplication2.Models.RoomNoTB", "RoomNoTB")
-                        .WithMany("ClassAllocateTB")
+                    b.HasOne("UniversityAPI.Model.Room", "Room")
+                        .WithMany("AllocateClass")
                         .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("DayTB");
+                    b.Navigation("Course");
+
+                    b.Navigation("Day");
 
                     b.Navigation("DepartmentTB");
 
-                    b.Navigation("RoomNoTB");
+                    b.Navigation("Room");
                 });
 
-            modelBuilder.Entity("WebApplication2.Models.CourseAssignTB", b =>
+            modelBuilder.Entity("UniversityAPI.Model.Course", b =>
                 {
-                    b.HasOne("WebApplication2.Models.TeacherTB", "TeacherTB")
-                        .WithMany("CourseAssignTB")
-                        .HasForeignKey("TeacherId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("TeacherTB");
-                });
-
-            modelBuilder.Entity("WebApplication2.Models.CourseTB", b =>
-                {
-                    b.HasOne("WebApplication2.Models.DepartmentTB", "DepartmentTB")
-                        .WithMany("CourseTB")
+                    b.HasOne("UniversityAPI.Model.DepartmentTB", "DepartmentTB")
+                        .WithMany("Course")
                         .HasForeignKey("DepartmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("WebApplication2.Models.SemesterTB", "SemesterTB")
-                        .WithMany("CourseTB")
+                    b.HasOne("UniversityAPI.Model.Semester", "Semester")
+                        .WithMany("Course")
                         .HasForeignKey("SemesterId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("DepartmentTB");
 
-                    b.Navigation("SemesterTB");
+                    b.Navigation("Semester");
                 });
 
-            modelBuilder.Entity("WebApplication2.Models.EnrollCourseTB", b =>
+            modelBuilder.Entity("UniversityAPI.Model.CourseAssignTeacher", b =>
                 {
-                    b.HasOne("WebApplication2.Models.StudentTB", "StudentTB")
-                        .WithMany("EnrollCourseTB")
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.HasOne("UniversityAPI.Model.Course", "Course")
+                        .WithMany("CourseAssignTeacher")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("UniversityAPI.Model.DepartmentTB", "DepartmentTB")
+                        .WithMany("CourseAssignTeacher")
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("UniversityAPI.Model.Teacher", "Teacher")
+                        .WithMany("CourseAssignTeacher")
+                        .HasForeignKey("TeacherId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+
+                    b.Navigation("DepartmentTB");
+
+                    b.Navigation("Teacher");
+                });
+
+            modelBuilder.Entity("UniversityAPI.Model.EnrollCourse", b =>
+                {
+                    b.HasOne("UniversityAPI.Model.Course", "Course")
+                        .WithMany("EnrollCourse")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("UniversityAPI.Model.StudentTB", "StudentTB")
+                        .WithMany("EnrollCourse")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Course");
 
                     b.Navigation("StudentTB");
                 });
 
-            modelBuilder.Entity("WebApplication2.Models.StudentResultTB", b =>
+            modelBuilder.Entity("UniversityAPI.Model.StudentResult", b =>
                 {
-                    b.HasOne("WebApplication2.Models.CourseTB", "CourseTB")
-                        .WithMany("StudentResultTB")
+                    b.HasOne("UniversityAPI.Model.Course", "Course")
+                        .WithMany("StudentResult")
                         .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("WebApplication2.Models.GradeLetterTB", "GradeLetterTB")
-                        .WithMany("StudentResultTB")
+                    b.HasOne("UniversityAPI.Model.GradeLetter", "GradeLetter")
+                        .WithMany("StudentResult")
                         .HasForeignKey("GradeLetterId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("CourseTB");
+                    b.HasOne("UniversityAPI.Model.StudentTB", "StudentTB")
+                        .WithMany("StudentResult")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
-                    b.Navigation("GradeLetterTB");
+                    b.Navigation("Course");
+
+                    b.Navigation("GradeLetter");
+
+                    b.Navigation("StudentTB");
                 });
 
-            modelBuilder.Entity("WebApplication2.Models.StudentTB", b =>
+            modelBuilder.Entity("UniversityAPI.Model.StudentTB", b =>
                 {
-                    b.HasOne("WebApplication2.Models.DepartmentTB", "DepartmentTB")
+                    b.HasOne("UniversityAPI.Model.DepartmentTB", "DepartmentTB")
                         .WithMany("StudentTB")
                         .HasForeignKey("DepartmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("DepartmentTB");
                 });
 
-            modelBuilder.Entity("WebApplication2.Models.TeacherTB", b =>
+            modelBuilder.Entity("UniversityAPI.Model.Teacher", b =>
                 {
-                    b.HasOne("WebApplication2.Models.DepartmentTB", "DepartmentTB")
-                        .WithMany("TeacherTB")
+                    b.HasOne("UniversityAPI.Model.DepartmentTB", "DepartmentTB")
+                        .WithMany("Teacher")
                         .HasForeignKey("DepartmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("WebApplication2.Models.DesignationTB", "DesignationTB")
-                        .WithMany("TeacherTB")
+                    b.HasOne("UniversityAPI.Model.Designation", "Designation")
+                        .WithMany("Teacher")
                         .HasForeignKey("DesignationId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("DepartmentTB");
 
-                    b.Navigation("DesignationTB");
+                    b.Navigation("Designation");
                 });
 
-            modelBuilder.Entity("WebApplication2.Models.CourseTB", b =>
+            modelBuilder.Entity("UniversityAPI.Model.Course", b =>
                 {
-                    b.Navigation("StudentResultTB");
+                    b.Navigation("AllocateClass");
+
+                    b.Navigation("CourseAssignTeacher");
+
+                    b.Navigation("EnrollCourse");
+
+                    b.Navigation("StudentResult");
                 });
 
-            modelBuilder.Entity("WebApplication2.Models.DayTB", b =>
+            modelBuilder.Entity("UniversityAPI.Model.Day", b =>
                 {
-                    b.Navigation("ClassAllocateTB");
+                    b.Navigation("AllocateClass");
                 });
 
-            modelBuilder.Entity("WebApplication2.Models.DepartmentTB", b =>
+            modelBuilder.Entity("UniversityAPI.Model.DepartmentTB", b =>
                 {
-                    b.Navigation("ClassAllocateTB");
+                    b.Navigation("AllocateClass");
 
-                    b.Navigation("CourseTB");
+                    b.Navigation("Course");
+
+                    b.Navigation("CourseAssignTeacher");
 
                     b.Navigation("StudentTB");
 
-                    b.Navigation("TeacherTB");
+                    b.Navigation("Teacher");
                 });
 
-            modelBuilder.Entity("WebApplication2.Models.DesignationTB", b =>
+            modelBuilder.Entity("UniversityAPI.Model.Designation", b =>
                 {
-                    b.Navigation("TeacherTB");
+                    b.Navigation("Teacher");
                 });
 
-            modelBuilder.Entity("WebApplication2.Models.GradeLetterTB", b =>
+            modelBuilder.Entity("UniversityAPI.Model.GradeLetter", b =>
                 {
-                    b.Navigation("StudentResultTB");
+                    b.Navigation("StudentResult");
                 });
 
-            modelBuilder.Entity("WebApplication2.Models.RoomNoTB", b =>
+            modelBuilder.Entity("UniversityAPI.Model.Room", b =>
                 {
-                    b.Navigation("ClassAllocateTB");
+                    b.Navigation("AllocateClass");
                 });
 
-            modelBuilder.Entity("WebApplication2.Models.SemesterTB", b =>
+            modelBuilder.Entity("UniversityAPI.Model.Semester", b =>
                 {
-                    b.Navigation("CourseTB");
+                    b.Navigation("Course");
                 });
 
-            modelBuilder.Entity("WebApplication2.Models.StudentTB", b =>
+            modelBuilder.Entity("UniversityAPI.Model.StudentTB", b =>
                 {
-                    b.Navigation("EnrollCourseTB");
+                    b.Navigation("EnrollCourse");
+
+                    b.Navigation("StudentResult");
                 });
 
-            modelBuilder.Entity("WebApplication2.Models.TeacherTB", b =>
+            modelBuilder.Entity("UniversityAPI.Model.Teacher", b =>
                 {
-                    b.Navigation("CourseAssignTB");
+                    b.Navigation("CourseAssignTeacher");
                 });
 #pragma warning restore 612, 618
         }

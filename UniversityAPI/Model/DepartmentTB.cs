@@ -1,4 +1,7 @@
-namespace WebApplication2.Models
+
+using UniversityAPI.Model;
+
+namespace UniversityAPI.Model
 {
     using System;
     using System.Collections.Generic;
@@ -6,39 +9,23 @@ namespace WebApplication2.Models
     using System.ComponentModel.DataAnnotations.Schema;
     
 
-    [Table("DepartmentTB")]
-    public partial class DepartmentTB
+    
+    public  class DepartmentTB
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public DepartmentTB()
-        {
-            ClassAllocateTB = new HashSet<ClassAllocateTB>();
-            CourseTB = new HashSet<CourseTB>();
-            StudentTB = new HashSet<StudentTB>();
-            TeacherTB = new HashSet<TeacherTB>();
-        }
 
-        
+        [Key]
         public int Id { get; set; }
-
-        [Required]
-        [StringLength(50)]
         public string DepartmentCode { get; set; }
-
-        [Required]
-        [StringLength(150)]
         public string DepartmentName { get; set; }
+        public List<StudentTB> StudentTB{ get; set; }
+        // public List<StudentTB> StudentTB { get; set; }
+        public List<Teacher> Teacher { get; set; }
+        public List<Course> Course { get; set; }
+        public List<CourseAssignTeacher> CourseAssignTeacher { get; set; }
+        public List<AllocateClass> AllocateClass { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ClassAllocateTB> ClassAllocateTB { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CourseTB> CourseTB { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<StudentTB> StudentTB { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<TeacherTB> TeacherTB { get; set; }
     }
 }

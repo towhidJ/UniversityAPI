@@ -1,4 +1,6 @@
-namespace WebApplication2.Models
+using UniversityAPI.Model;
+
+namespace UniversityAPI.Model
 {
     using System;
     using System.Collections.Generic;
@@ -6,45 +8,31 @@ namespace WebApplication2.Models
     using System.ComponentModel.DataAnnotations.Schema;
     
 
-    [Table("StudentTB")]
-    public partial class StudentTB
+    public class StudentTB
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public StudentTB()
-        {
-            EnrollCourseTB = new HashSet<EnrollCourseTB>();
-        }
+        
 
-
+        [Key]
         public int Id { get; set; }
 
-        public int DepartmentId { get; set; }
-
-        [Required]
-        [StringLength(50)]
         public string StudentName { get; set; }
 
-        [Required]
-        [StringLength(150)]
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
-        [Required]
-        [StringLength(14)]
         public string ContactNo { get; set; }
 
-        [Column(TypeName = "date")]
-        public DateTime RegisterDate { get; set; }
+        public DateTime? RegisterDate { get; set; }
 
-        [Required]
-        [StringLength(150)]
         public string Address { get; set; }
 
-        [StringLength(50)]
         public string RegistrationNo { get; set; }
+        public int DepartmentId { get; set; }
 
-        public virtual DepartmentTB DepartmentTB { get; set; }
+        public DepartmentTB DepartmentTB{ get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<EnrollCourseTB> EnrollCourseTB { get; set; }
+        public List<EnrollCourse> EnrollCourse { get; set; }
+        public List<StudentResult> StudentResult { get; set; }
+
+
     }
 }

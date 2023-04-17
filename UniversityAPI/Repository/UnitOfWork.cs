@@ -8,12 +8,15 @@ namespace UniversityAPI.Repository
         private readonly StudentDB _db;
         public IStudentRepository students { get; private set; }
         public IDepartmentRepository departments { get; set; }
+        public ICourseRepository courses { get; }
+
 
         public UnitOfWork(StudentDB db)
         {
             _db = db;
             students = new StudentRepository(_db);
             departments = new DepartmentRepository(_db);
+            courses = new CourseRepository(_db);
         }
         public async Task SaveAsync()
         {

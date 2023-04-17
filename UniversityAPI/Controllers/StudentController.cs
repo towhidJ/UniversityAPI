@@ -71,8 +71,8 @@ namespace UniversityAPI.Controllers
             await this.unitofWork.SaveAsync();
             return Ok(_data);
         }
-        [HttpDelete("remove")]
-        public async Task<IActionResult> Remove(int id)
+        [HttpDelete("remove/{id}")]
+        public async Task<IActionResult> Remove([FromRoute] int id)
         {
             var _data = await this.unitofWork.students.DeleteEntity(id);
             await this.unitofWork.SaveAsync();

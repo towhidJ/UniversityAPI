@@ -4,6 +4,7 @@
     {
         IStudentRepository students { get; }
         IDepartmentRepository departments { get; }
+        ICourseRepository courses { get; }
         Task SaveAsync();
     }
 }

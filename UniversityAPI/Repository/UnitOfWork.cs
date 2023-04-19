@@ -9,6 +9,7 @@ namespace UniversityAPI.Repository
         public IStudentRepository students { get; private set; }
         public IDepartmentRepository departments { get; set; }
         public ICourseRepository courses { get; }
+        public ISemesterRepository semesters { get; }
 
 
         public UnitOfWork(StudentDB db)
@@ -17,6 +18,7 @@ namespace UniversityAPI.Repository
             students = new StudentRepository(_db);
             departments = new DepartmentRepository(_db);
             courses = new CourseRepository(_db);
+            semesters = new SemesterRepository(_db);
         }
         public async Task SaveAsync()
         {

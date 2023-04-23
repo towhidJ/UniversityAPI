@@ -10,6 +10,8 @@ namespace UniversityAPI.Repository
         public IDepartmentRepository departments { get; set; }
         public ICourseRepository courses { get; }
         public ISemesterRepository semesters { get; }
+        public ITeacherRepository teachers { get; }
+        public ICourseAssignToTeacherRepository courseAssignToTeacher { get; }
 
 
         public UnitOfWork(StudentDB db)
@@ -19,6 +21,8 @@ namespace UniversityAPI.Repository
             departments = new DepartmentRepository(_db);
             courses = new CourseRepository(_db);
             semesters = new SemesterRepository(_db);
+            teachers = new TeacherRepository(_db);
+            courseAssignToTeacher = new CourseAssignToTeacherRepository(_db);
         }
         public async Task SaveAsync()
         {

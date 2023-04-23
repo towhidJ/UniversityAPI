@@ -35,47 +35,64 @@ namespace UniversityAPI.Controllers
         public async Task<IActionResult> Create(CourseDto course)
         {
             var newCourse = _mapper.Map<Course>(course);
+            var cc =  unitofWork.courses.UniqueCourseCode(course.CourseCode);
+            var cn = unitofWork.courses.UniqueCourseName(course.CourseName);
+            if (cc)
+            {
+                return BadRequest("Course Code Already Added");
+            }
+
+            if (cn)
+            {
+                return BadRequest("Course Name Already Added");
+
+            }
             var _data = await unitofWork.courses.AddEntity(newCourse);
             await _db.SaveChangesAsync();
-            return Ok("Course Add Successfull");
+            return Ok(_data);
+        }
+        [HttpPut("update")]
+        public async Task<IActionResult> Update(CourseDto courseDto)
+        {
+            var modifiedCourse = _mapper.Map<Course>(courseDto);
+            var cc = unitofWork.courses.UniqueCourseCode(courseDto.CourseCode);
+            var cn = unitofWork.courses.UniqueCourseName(courseDto.CourseName);
+            if (cc)
+            {
+                return BadRequest("Course Code Already Added");
+            }
+
+            if (cn)
+            {
+                return BadRequest("Course Name Already Added");
+
+            }
+            var _data = await unitofWork.courses.UpdateEntity(modifiedCourse);
+            await this.unitofWork.SaveAsync();
+            return Ok(_data);
+        }
+        [HttpDelete("remove/{id}")]
+        public async Task<IActionResult> Remove([FromRoute] int id)
+        {
+            var _data = await this.unitofWork.courses.DeleteEntity(id);
+            await this.unitofWork.SaveAsync();
+            return Ok(_data);
         }
 
         [HttpGet("getByDepId")]
         public async Task<IActionResult> GetCourseByDepartmentId(int departmentId)
-        { 
+        {
 
-            // var course = (from c in _db.CourseTb
-            //     join ca in _db.CourseAssignTb 
-            //         on c.Id equals ca.CourseId 
-            //     join t in _db.TeacherTb 
-            //         on ca.TeacherId equals t.Id
-            //     join dep in _db.DepartmentTb 
-            //     on c.DepartmentId equals dep.Id
-            //     where c.DepartmentId == departmentId
-            //     
-            //     select new CourseShowView()
-            //     {
-            //         DepartmentCode = dep.DepartmentCode,
-            //         CourseCode = c.CourseCode,
-            //         CourseName = c.CourseName,
-            //         TeacherName = (t.TeacherName == null) ? "Not Assign" : t.TeacherName,
-            //     }).ToList();
+            var course = unitofWork.courses.GetCourseByDepartmentId(departmentId);
 
-            var course = (from c in _db.CourseTb
-                join ca in _db.CourseAssignTb on c.Id equals ca.CourseId into caa
-                from ctl in caa.DefaultIfEmpty()
-                join t in _db.TeacherTb on ctl.TeacherId equals t.Id into ta
-                from taa in ta.DefaultIfEmpty()
-                join dep in _db.DepartmentTb on c.DepartmentId equals dep.Id
-                where dep.Id == departmentId
-                select new CourseShowView()
-            {
-                    CourseCode = c.CourseCode,
-                    CourseName = c.CourseName,
-                    DepartmentCode = dep.DepartmentCode,
-                    TeacherName = taa.TeacherName==null?"Not Assign":taa.TeacherName
-                    
-            }).ToList();
+            return Ok(course);
+        }
+
+        [HttpGet("getbyid/{id}")]
+        public  async Task<IActionResult> getById(int id)
+        {
+
+            var course = await unitofWork.courses.GetAsync(id);
 
             return Ok(course);
         }

@@ -1,10 +1,11 @@
-﻿using UniversityAPI.Model;
+﻿using System.ComponentModel.DataAnnotations;
+using UniversityAPI.Model;
 
 namespace UniversityAPI.Dtos
 {
     public class StudentDto
     {
-        
+        [Key]
         public int Id { get; set; }
 
         public string StudentName { get; set; }

@@ -80,6 +80,7 @@ namespace UniversityAPI.Model
                 .HasOne(_ => _.Course)
                 .WithMany(c => c.CourseAssignTeacher)
                 .HasForeignKey(a => a.CourseId);
+            builder.Entity<CourseAssignTeacher>().Property(c => c.Action).HasDefaultValue(true);
                 
             builder.Entity<Course>()
                 .HasOne(_ => _.DepartmentTB)

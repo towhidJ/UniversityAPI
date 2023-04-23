@@ -61,7 +61,7 @@ namespace UniversityAPI.Controllers
             newStudent.RegistrationNo = registrationNumber(student.DepartmentId, student.RegisterDate);
             var _data = await unitofWork.students.AddEntity(newStudent);
             await _db.SaveChangesAsync();
-            return Ok("Student Add Success Full");
+            return Ok(_data);
         }
         [HttpPut("update")]
         public async Task<IActionResult> Update(StudentDto student)

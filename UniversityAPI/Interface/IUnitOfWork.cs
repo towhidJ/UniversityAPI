@@ -9,6 +9,7 @@
         ITeacherRepository teachers { get; }
         ICourseAssignToTeacherRepository courseAssignToTeacher { get; }
         IEnrollCourseRepository enrollCourse { get; }
+        IStudentResultRepository studentResult { get; }
         Task SaveAsync();
     }
 }

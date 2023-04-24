@@ -1,5 +1,6 @@
 ﻿using UniversityAPI.Interface;
 using UniversityAPI.Model;
+using UniversityAPI.Model.ViewModel;
 
 namespace UniversityAPI.Repository
 {
@@ -29,6 +30,36 @@ namespace UniversityAPI.Repository
             {
                 throw ex;
             }
+        }
+
+        public List<StudentView> GetStudentByEnrollCourse(int studentId)
+        {
+            var student =
+                from std
+                    in _db.StudentTb
+                join enrollCourse in _db.EnrollCourseTb
+                    on std.Id
+                    equals enrollCourse.StudentId
+                join dep in _db.DepartmentTb
+                    on std.DepartmentId
+                    equals dep.Id
+                join course in _db.CourseTb on new { X1 = enrollCourse.CourseId, X2 = 1 } equals new
+                    { X1 = course.Id, X2 = course.Action }
+                where enrollCourse.StudentId== studentId
+                select new StudentView()
+                {
+                    CourseId = enrollCourse.CourseId,
+                    CourseName = course.CourseName,
+                    Email = std.Email,
+                    DepartmentName = dep.DepartmentName,
+                    DepartmentId = dep.Id,
+                    StudentName = std.StudentName,
+                    RegistrationNo = std.RegistrationNo,
+                    StudentId = enrollCourse.StudentId
+                };
+
+            return student.ToList();
+
         }
     }
 }

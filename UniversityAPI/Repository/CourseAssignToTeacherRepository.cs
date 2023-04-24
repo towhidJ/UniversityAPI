@@ -35,10 +35,10 @@ namespace UniversityAPI.Repository
                 var credit = _db.CourseTb.Single(c => c.Id == courseAssign.CourseId).Credit;
                 var AvailableCredit = _db.TeacherTb.Single(c => c.Id == courseAssign.TeacherId).RemainingCredit;
                 var reminingCredit = (AvailableCredit - credit);
-                if (AvailableCredit < credit)
-                {
-                    return "Credit not available";
-                }
+                // if (AvailableCredit < credit)
+                // {
+                //     return "Credit not available";
+                // }
 
                 await UpdateTeacherCredit(reminingCredit, courseAssign.TeacherId);
                 

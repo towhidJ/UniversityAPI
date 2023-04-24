@@ -8,6 +8,7 @@
         ISemesterRepository semesters { get; }
         ITeacherRepository teachers { get; }
         ICourseAssignToTeacherRepository courseAssignToTeacher { get; }
+        IEnrollCourseRepository enrollCourse { get; }
         Task SaveAsync();
     }
 }

@@ -12,6 +12,7 @@ namespace UniversityAPI.Repository
         public ISemesterRepository semesters { get; }
         public ITeacherRepository teachers { get; }
         public ICourseAssignToTeacherRepository courseAssignToTeacher { get; }
+        public IEnrollCourseRepository enrollCourse { get; }
 
 
         public UnitOfWork(StudentDB db)
@@ -23,6 +24,7 @@ namespace UniversityAPI.Repository
             semesters = new SemesterRepository(_db);
             teachers = new TeacherRepository(_db);
             courseAssignToTeacher = new CourseAssignToTeacherRepository(_db);
+            enrollCourse = new EnrollCourseRepository(_db);
         }
         public async Task SaveAsync()
         {

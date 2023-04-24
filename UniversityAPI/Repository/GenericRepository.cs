@@ -8,7 +8,7 @@ namespace UniversityAPI.Repository
     {
         protected readonly StudentDB _db;
         internal DbSet<T> DbSet { get; set; }
-        protected GenericRepository(StudentDB db)
+        public GenericRepository(StudentDB db)
         {
             _db = db;
             this.DbSet = db.Set<T>();

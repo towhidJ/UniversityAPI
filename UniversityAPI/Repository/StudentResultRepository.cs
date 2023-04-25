@@ -57,11 +57,9 @@ namespace UniversityAPI.Repository
             //         })
             //     .ToList();
 
-            var result = (from s in _db.StudentResultViews
-                where s.sId==studentId
-                    select s).ToList();
+            var result = _db.StudentResultViews.FromSqlRaw($"Student_Result {studentId}" );
 
-            return result;
+            return result.ToList();
         }
     }
 }

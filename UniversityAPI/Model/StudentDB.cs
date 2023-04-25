@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using UniversityAPI.Authentication;
 using UniversityAPI.Model;
+using UniversityAPI.Model.ViewModel;
 
 namespace UniversityAPI.Model
 {
@@ -26,6 +27,8 @@ namespace UniversityAPI.Model
         public DbSet<StudentResult> StudentResultTb { get; set; }
         public DbSet<Teacher> TeacherTb { get; set; }
 
+        public DbSet<StudentResultViewModel> StudentResultViews { get; set; }
+
         
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -34,6 +37,8 @@ namespace UniversityAPI.Model
             {
                 relationship.DeleteBehavior = DeleteBehavior.Restrict;
             }
+
+            builder.Entity<StudentResultViewModel>().HasNoKey().ToView("StudentResultView");
             builder.Entity<StudentTB>()
                 .HasOne(_ => _.DepartmentTB)
                 .WithMany(a => a.StudentTB)

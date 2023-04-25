@@ -38,10 +38,18 @@ namespace UniversityAPI.Controllers
             var AllStudentView = unitofWork.enrollCourse.GetStudentByEnrollCourse(studentId);
             return Ok(AllStudentView);
         }
-        // public Task<IActionResult> CourseByRegistrationNo(int studentId)
-        // {
-        //     List<StudentResult> AllCourseView = studentViewManager.GetCourseByEnrollCourse(studentId);
-        //     return Json(AllCourseView);
-        // }
+        [HttpGet("getCourseByReg")]
+        public async Task<IActionResult> CourseByRegistrationNo(int studentId)
+        {
+            List<Course> AllCourseView = unitofWork.enrollCourse.GetCourseByEnrollCourse(studentId);
+            return Ok(AllCourseView);
+        }
+
+        [HttpGet("result")]
+        public async Task<IActionResult> ShowResult(int studentId)
+        {
+            var result = unitofWork.studentResult.GetAllStudentResults(studentId);
+            return Ok(result);
+        }
     }
 }

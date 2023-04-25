@@ -74,7 +74,7 @@ namespace UniversityAPI.Repository
 
         public async Task<bool> UnassignCourse()
         {
-            var isAction = _db.CourseAssignTb.Where(c => c.Action == true);
+            var isAction = _db.CourseTb.Where(c => c.Action == 1);
             if(isAction!=null)
             {
                 
@@ -83,6 +83,9 @@ namespace UniversityAPI.Repository
                 await _db.SaveChangesAsync();
                 var cat = _db.CourseAssignTb.ToList();
                  cat.ForEach(c=>c.Action=false);
+                await _db.SaveChangesAsync();
+                var course = _db.CourseTb.ToList();
+                course.ForEach(c => c.Action = 0);
                 await _db.SaveChangesAsync();
                 return true;
             }

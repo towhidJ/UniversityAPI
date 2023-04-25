@@ -1,4 +1,5 @@
-﻿using UniversityAPI.Interface;
+﻿using UniversityAPI.Dtos;
+using UniversityAPI.Interface;
 using UniversityAPI.Model;
 using UniversityAPI.Model.ViewModel;
 
@@ -61,5 +62,23 @@ namespace UniversityAPI.Repository
             return student.ToList();
 
         }
+
+        public List<Course> GetCourseByEnrollCourse(int studentId)
+        {
+            
+            var student = (
+                from course in _db.CourseTb
+                join enrollCourse in _db.EnrollCourseTb on course.Id equals enrollCourse.CourseId
+                where enrollCourse.StudentId == studentId
+                where course.Action==1
+                select new Course()
+                {
+                    CourseName = course.CourseName,
+                    Id = enrollCourse.CourseId
+
+                }).ToList();
+            return student;
+        }
+
     }
 }

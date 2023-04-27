@@ -2,6 +2,7 @@
 using UniversityAPI.Dtos;
 using UniversityAPI.Interface;
 using UniversityAPI.Model;
+using UniversityAPI.Model.ViewModel;
 
 namespace UniversityAPI.Repository
 {
@@ -73,6 +74,55 @@ namespace UniversityAPI.Repository
            }
         }
 
-        
+
+        public List<StudentView> GetStudentById(int studentId)
+        {
+            var student = (from dep in _db.DepartmentTb
+                join c in _db.CourseTb on dep.Id equals c.DepartmentId
+                join std in _db.StudentTb on dep.Id equals std.DepartmentId
+                where std.Id == studentId
+                select new StudentView()
+                {
+                    CourseId = c.Id,
+                    CourseName = c.CourseName,
+                    DepartmentName = dep.DepartmentName,
+                    DepartmentId = std.DepartmentId,
+                    StudentName = std.StudentName,
+                    StudentId = std.Id,
+                    Email = std.Email,
+                    RegistrationNo = std.RegistrationNo
+                }).ToList();
+
+            return student;
+        }
+
+        public List<StudentView> GetCourseById(int studentId)
+        {
+            var student = (from dep in _db.DepartmentTb
+                join c in _db.CourseTb on dep.Id equals c.DepartmentId
+                join std in _db.StudentTb on dep.Id equals std.DepartmentId
+                where c.Action==1 && std.Id == studentId
+                select new StudentView()
+                {
+                    CourseId = c.Id,
+                    CourseName = c.CourseName,
+                    StudentId = std.Id
+                }).ToList();
+
+            return student;
+        }
+        public List<Course> GetCourseByDepId(int depId)
+        {
+            var student = (from dep in _db.DepartmentTb
+                join c in _db.CourseTb on dep.Id equals c.DepartmentId
+                where c.Action == 1 && dep.Id == depId
+                select new Course()
+                {
+                    Id = c.Id,
+                    CourseName = c.CourseName,
+                }).ToList();
+
+            return student;
+        }
     }
 }

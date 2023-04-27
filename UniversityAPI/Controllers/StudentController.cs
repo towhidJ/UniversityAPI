@@ -19,13 +19,14 @@ namespace UniversityAPI.Controllers
         public readonly IUnitOfWork unitofWork;
         private readonly StudentDB _db;
         private readonly IMapper _mapper;
-        public StudentController(IUnitOfWork work,StudentDB db,IMapper mapper)
+
+        public StudentController(IUnitOfWork work, StudentDB db, IMapper mapper)
         {
-            _db=db;
+            _db = db;
             unitofWork = work;
-            _mapper=mapper;
+            _mapper = mapper;
         }
-        
+
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -58,11 +59,13 @@ namespace UniversityAPI.Controllers
                 return BadRequest("Email Is Already Added");
 
             }
+
             newStudent.RegistrationNo = registrationNumber(student.DepartmentId, student.RegisterDate);
             var _data = await unitofWork.students.AddEntity(newStudent);
             await _db.SaveChangesAsync();
             return Ok(_data);
         }
+
         [HttpPut("update")]
         public async Task<IActionResult> Update(StudentDto student)
         {
@@ -71,6 +74,7 @@ namespace UniversityAPI.Controllers
             await this.unitofWork.SaveAsync();
             return Ok(_data);
         }
+
         [HttpDelete("remove/{id}")]
         public async Task<IActionResult> Remove([FromRoute] int id)
         {
@@ -108,17 +112,19 @@ namespace UniversityAPI.Controllers
                 return RegistrationNo;
             }
         }
+
         [NonAction]
         public bool uniqueEmail(string email)
         {
             var em = _db.StudentTb.FirstOrDefault(x => x.Email == email);
-            if (em!=null)
+            if (em != null)
             {
                 return true;
             }
 
             return false;
         }
+
         [NonAction]
         public bool uniquePhone(string phone)
         {
@@ -131,6 +137,27 @@ namespace UniversityAPI.Controllers
             return false;
         }
 
+        [HttpGet("getstudentbystudentid")]
+        public IActionResult StudentById(int studentId)
+        {
+            var res = unitofWork.students.GetStudentById(studentId);
+            return Ok(res);
+        }
+
+        [HttpGet("getcoursebystudentid")]
+        public IActionResult CourseById(int studentId)
+        {
+            var res = unitofWork.students.GetCourseById(studentId);
+            return Ok(res);
+
+        }
+
+        [HttpGet("getcoursebydepid")]
+        public IActionResult CourseByDepId(int depId)
+        {
+            var res = unitofWork.students.GetCourseByDepId(depId);
+            return Ok(res);
+        }
 
     }
 }

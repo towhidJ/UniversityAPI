@@ -6,8 +6,9 @@ namespace UniversityAPI.Interface
     public interface ICourseAssignToTeacherRepository:IGenericRepository<CourseAssignTeacher>
     {
         Task<string> AddCourseAssign(CourseAssignTeacher entity);
-        Task<bool> UpdateTeacherCredit(double reminingcredit, int teacherId);
+        bool UpdateTeacherCredit(double reminingcredit, int teacherId);
         Task<bool> UnassignCourse();
+        public List<ShowAssignView> GetCourseAssignByDepartmentId(int depId);
     }
     
 }

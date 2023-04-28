@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using UniversityAPI.Interface;
 using UniversityAPI.Model;
+using UniversityAPI.Model.ViewModel;
 
 namespace UniversityAPI.Repository
 {
@@ -13,7 +14,7 @@ namespace UniversityAPI.Repository
 
         public override async Task<List<CourseAssignTeacher>> GetAllAsync()
         {
-            return await DbSet.Include(c => c.DepartmentTB).ToListAsync();
+            return await DbSet.Include(c => c.DepartmentTB).Where(c=>c.Action==true).ToListAsync();
         }
 
         public override async Task<CourseAssignTeacher> GetAsync(int id)
@@ -27,23 +28,25 @@ namespace UniversityAPI.Repository
         {
             try
             {
-                var iseXIST = await _db.CourseAssignTb.FirstOrDefaultAsync(c => c.CourseId == courseAssign.CourseId && c.Action==true );
+                var iseXIST = await _db.CourseAssignTb.FirstOrDefaultAsync(c => c.CourseId == courseAssign.CourseId  );
                 if (iseXIST != null)
                 {
                     return "Course Already Assign";
                 }
-                var credit = _db.CourseTb.Single(c => c.Id == courseAssign.CourseId).Credit;
-                var AvailableCredit = _db.TeacherTb.Single(c => c.Id == courseAssign.TeacherId).RemainingCredit;
-                var reminingCredit = (AvailableCredit - credit);
-                // if (AvailableCredit < credit)
-                // {
-                //     return "Credit not available";
-                // }
-
-                await UpdateTeacherCredit(reminingCredit, courseAssign.TeacherId);
+                else
+                {
+                    var credit = _db.CourseTb.Single(c => c.Id == courseAssign.CourseId).Credit;
+                    var AvailableCredit = _db.TeacherTb.Single(c => c.Id == courseAssign.TeacherId).RemainingCredit;
+                    var reminingCredit = (AvailableCredit - credit);
+                    // if (AvailableCredit < credit)
+                    // {
+                    //     return "Credit not available";
+                    // }
+                     UpdateTeacherCredit(reminingCredit, courseAssign.TeacherId);
+                    await DbSet.AddAsync(courseAssign);
+                    return "Course Assign Success";
+                }
                 
-                await DbSet.AddAsync(courseAssign);
-                return "Course Assign Success";
             }
             catch (Exception ex)
             {
@@ -54,14 +57,14 @@ namespace UniversityAPI.Repository
      
 
 
-        public async Task<bool> UpdateTeacherCredit(double reminingcredit, int teacherId)
+        public bool UpdateTeacherCredit(double reminingcredit, int teacherId)
         {
-               var existData = await _db.TeacherTb.FirstOrDefaultAsync(x => x.Id == teacherId);
+               var existData =  _db.TeacherTb.FirstOrDefault(x => x.Id == teacherId);
                 if (existData != null)
                 {
                     existData.RemainingCredit = reminingcredit;
                     _db.TeacherTb.Update(existData);
-                    _db.SaveChangesAsync();
+                    _db.SaveChanges();
 
                     return true;
                 }
@@ -90,6 +93,33 @@ namespace UniversityAPI.Repository
                 return true;
             }
             return false;
+        }
+
+        public List<ShowAssignView> GetCourseAssignByDepartmentId(int depId)
+        {
+            // var course = (from c in _db.CourseTb
+            //     join ca in _db.CourseAssignTb on new { X1 = c.Id, X2 = true } equals new { X1 = ca.CourseId, X2 = ca.Action }
+            //         into caa
+            //     from ctl in caa.DefaultIfEmpty()
+            //     join t in _db.TeacherTb on ctl.TeacherId equals t.Id into ta
+            //     from taa in ta.DefaultIfEmpty()
+            //     join dep in _db.DepartmentTb on c.DepartmentId equals dep.Id
+            //     where dep.Id == depId
+            //     where c.Action == 1
+
+                // select new CourseShowView()
+                // {
+                //     Id = c.Id,
+                //     CourseCode = c.CourseCode,
+                //     CourseName = c.CourseName,
+                //     DepartmentCode = dep.DepartmentCode,
+                //     TeacherName = taa.TeacherName == null ? "Not Assign" : taa.TeacherName
+                //
+                // }).ToList();
+
+                var course = _db.StudentAssignView.FromSqlRaw("SELECT * FROM ShowAssignView WHERE DepartmentId =" +
+                                                              depId + "AND Action = 1");
+            return course.ToList();
         }
     }
 }

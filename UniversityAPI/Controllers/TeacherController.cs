@@ -28,6 +28,14 @@ namespace UniversityAPI.Controllers
             // var _data = _db.StudentTb.Include(c => c.DepartmentTB).ToListAsync();
             return Ok(_data);
         }
+        [HttpGet("getByDepId")]
+        public async Task<IActionResult> GetCourseByDepartmentId(int departmentId)
+        {
+
+            var course = unitofWork.courseAssignToTeacher.GetCourseAssignByDepartmentId(departmentId);
+
+            return Ok(course);
+        }
 
         [HttpGet("getbyid/{id}")]
         public async Task<IActionResult> GetById(int id)
@@ -41,18 +49,18 @@ namespace UniversityAPI.Controllers
         public async Task<IActionResult> Create(TeacherDto teacher)
         {
             var newTeacher = _mapper.Map<Teacher>(teacher);
-            // var em = uniqueEmail(student.Email);
-            // var ph = uniquePhone(student.ContactNo);
-            // if (ph)
-            // {
-            //     return BadRequest("Phone Is Already Added");
-            // }
-            //
-            // if (em)
-            // {
-            //     return BadRequest("Email Is Already Added");
-            //
-            // }
+            var em = uniqueEmail(teacher.Email);
+            var ph = uniquePhone(teacher.ContactNo);
+            if (ph)
+            {
+                return BadRequest("Phone Is Already Added");
+            }
+            
+            if (em)
+            {
+                return BadRequest("Email Is Already Added");
+            
+            }
             
             var _data = await unitofWork.teachers.AddEntity(newTeacher);
             await _db.SaveChangesAsync();
@@ -72,6 +80,37 @@ namespace UniversityAPI.Controllers
             var _data = await this.unitofWork.teachers.DeleteEntity(id);
             await this.unitofWork.SaveAsync();
             return Ok(_data);
+        }
+
+        [NonAction]
+        public bool uniqueEmail(string email)
+        {
+            var em = _db.TeacherTb.FirstOrDefault(x => x.Email == email);
+            if (em != null)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        [NonAction]
+        public bool uniquePhone(string phone)
+        {
+            var em = _db.TeacherTb.FirstOrDefault(x => x.ContactNo == phone);
+            if (em != null)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        [HttpGet("getteacherbydepid")]
+        public IActionResult TeacherByDepId(int depId)
+        {
+            var res = unitofWork.teachers.GetTeacherByDepId(depId);
+            return Ok(res);
         }
     }
 }

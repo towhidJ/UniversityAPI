@@ -120,6 +120,8 @@ namespace UniversityAPI.Repository
                 {
                     Id = c.Id,
                     CourseName = c.CourseName,
+                    CourseCode = c.CourseCode,
+                    Credit = c.Credit
                 }).ToList();
 
             return student;

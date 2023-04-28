@@ -14,13 +14,13 @@ namespace UniversityAPI.Repository
 
         public override async Task<List<Course>> GetAllAsync()
         {
-            return await DbSet.Include(c => c.DepartmentTB).Include(c=>c.Semester).ToListAsync();
+            return await DbSet.Include(c => c.DepartmentTB).Include(c=>c.Semester).Where(x=>x.Action==1).ToListAsync();
 
         }
 
         public override async Task<Course> GetAsync(int id)
         {
-            return await DbSet.FirstOrDefaultAsync(x => x.Id == id);
+            return await DbSet.FirstOrDefaultAsync(x => x.Id == id && x.Action==1);
         }
 
         public override async Task<bool> AddEntity(Course course)
@@ -107,7 +107,7 @@ namespace UniversityAPI.Repository
 
         public bool UniqueCourseCode(string code)
         {
-            var em = _db.CourseTb.FirstOrDefault(x => x.CourseCode == code);
+            var em = _db.CourseTb.FirstOrDefault(x => x.CourseCode == code && x.Action==1);
             if (em != null)
             {
                 return true;
@@ -117,7 +117,7 @@ namespace UniversityAPI.Repository
         }
         public bool UniqueCourseName(string name)
         {
-            var em = _db.CourseTb.FirstOrDefault(x => x.CourseName == name);
+            var em = _db.CourseTb.FirstOrDefault(x => x.CourseName == name && x.Action==1);
             if (em != null)
             {
                 return true;

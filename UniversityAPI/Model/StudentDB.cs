@@ -28,6 +28,7 @@ namespace UniversityAPI.Model
         public DbSet<Teacher> TeacherTb { get; set; }
 
         public DbSet<StudentResultViewModel> StudentResultViews { get; set; }
+        public DbSet<ShowAssignView> StudentAssignView { get; set; }
 
         
 
@@ -39,6 +40,7 @@ namespace UniversityAPI.Model
             }
 
             builder.Entity<StudentResultViewModel>().HasNoKey().ToView("StudentResultView");
+            builder.Entity<ShowAssignView>().HasNoKey().ToView("ShowAssignView");
             builder.Entity<StudentTB>()
                 .HasOne(_ => _.DepartmentTB)
                 .WithMany(a => a.StudentTB)

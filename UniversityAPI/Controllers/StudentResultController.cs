@@ -38,7 +38,13 @@ namespace UniversityAPI.Controllers
             var AllStudentView = unitofWork.enrollCourse.GetStudentByEnrollCourse(studentId);
             return Ok(AllStudentView);
         }
-        [HttpGet("getCourseByReg")]
+        [HttpGet("getstudentbyenroll")]
+        public async Task<IActionResult> GetStudentByEnroll()
+        {
+            var AllStudentView = unitofWork.enrollCourse.GetStudentByEnrollCourse();
+            return Ok(AllStudentView);
+        }
+        [HttpGet("getcoursebyreg")]
         public async Task<IActionResult> CourseByRegistrationNo(int studentId)
         {
             List<Course> AllCourseView = unitofWork.enrollCourse.GetCourseByEnrollCourse(studentId);

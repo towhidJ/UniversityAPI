@@ -8,5 +8,6 @@ namespace UniversityAPI.Interface
         Task<string> EnrollCourse(EnrollCourse enrollCourse);
         List<StudentView> GetStudentByEnrollCourse(int studentId);
         List<Course> GetCourseByEnrollCourse(int studentId);
+        List<StudentView> GetStudentByEnrollCourse();
     }
 }

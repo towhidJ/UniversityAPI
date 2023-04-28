@@ -10,6 +10,8 @@
         ICourseAssignToTeacherRepository courseAssignToTeacher { get; }
         IEnrollCourseRepository enrollCourse { get; }
         IStudentResultRepository studentResult { get; }
+        IGradeLetterRepository gradeLetters{ get; }
+        IDesignationRepository designation { get; }
         Task SaveAsync();
     }
 }

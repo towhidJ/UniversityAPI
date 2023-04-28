@@ -9,6 +9,7 @@ namespace UniversityAPI.Dtos
         {
             CreateMap<StudentDto, StudentTB>();
             CreateMap<DepartmentDto, DepartmentTB>();
+            CreateMap<DesignationDto, Designation>();
             CreateMap<CourseDto, Course>();
             CreateMap<TeacherDto, Teacher>();
             CreateMap<EnrollCourseDto, EnrollCourse>();

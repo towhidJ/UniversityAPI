@@ -14,6 +14,8 @@ namespace UniversityAPI.Repository
         public ICourseAssignToTeacherRepository courseAssignToTeacher { get; }
         public IEnrollCourseRepository enrollCourse { get; }
         public IStudentResultRepository studentResult { get; }
+        public IGradeLetterRepository gradeLetters{ get; }
+        public IDesignationRepository designation { get; }
 
 
         public UnitOfWork(StudentDB db)
@@ -27,6 +29,8 @@ namespace UniversityAPI.Repository
             courseAssignToTeacher = new CourseAssignToTeacherRepository(_db);
             enrollCourse = new EnrollCourseRepository(_db);
             studentResult = new StudentResultRepository(_db);
+            gradeLetters = new GradeLetterRepository(_db);
+            designation = new DesignationRepository(_db);
         }
         public async Task SaveAsync()
         {

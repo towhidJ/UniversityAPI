@@ -80,5 +80,19 @@ namespace UniversityAPI.Repository
             return student;
         }
 
+        public List<StudentView> GetStudentByEnrollCourse()
+        {
+            var student = (from ec in _db.EnrollCourseTb
+                join s in _db.StudentTb on ec.StudentId equals s.Id
+                select new StudentView()
+                {
+                    StudentId = ec.StudentId,
+                    RegistrationNo = s.RegistrationNo,
+                    DepartmentName = s.DepartmentTB.DepartmentName,
+                    StudentName = s.StudentName,
+                    Email = s.Email
+                }).Distinct().ToList();
+            return student;
+        }
     }
 }

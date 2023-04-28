@@ -50,6 +50,7 @@ builder.Services.AddSwaggerGen(opt =>
 });
 builder.Services.AddDbContext<StudentDB>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("studentDBSQL")));
 
+
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Services.AddIdentity<ApplicationUser,IdentityRole>(options =>

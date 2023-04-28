@@ -73,7 +73,17 @@ namespace UniversityAPI.Repository
             }
         }
 
-       
+        public List<Teacher> GetTeacherByDepId(int depId)
+        {
+            var student = (from dep in _db.DepartmentTb
+                join t in _db.TeacherTb on dep.Id equals t.DepartmentId
+                where dep.Id == depId
+                select t).ToList();
+
+            return student;
+        }
+
+
 
 
     }

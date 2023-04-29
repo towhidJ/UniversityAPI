@@ -16,6 +16,7 @@ namespace UniversityAPI.Repository
         public IStudentResultRepository studentResult { get; }
         public IGradeLetterRepository gradeLetters{ get; }
         public IDesignationRepository designation { get; }
+        public IClassScheduleRepository classSchedule { get; }
 
 
         public UnitOfWork(StudentDB db)
@@ -31,6 +32,7 @@ namespace UniversityAPI.Repository
             studentResult = new StudentResultRepository(_db);
             gradeLetters = new GradeLetterRepository(_db);
             designation = new DesignationRepository(_db);
+            classSchedule = new ClassScheduleRepository(_db);
         }
         public async Task SaveAsync()
         {

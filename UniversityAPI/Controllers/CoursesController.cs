@@ -55,8 +55,17 @@ namespace UniversityAPI.Controllers
         public async Task<IActionResult> Update(CourseDto courseDto)
         {
             var modifiedCourse = _mapper.Map<Course>(courseDto);
-            var cc = unitofWork.courses.UniqueCourseCode(courseDto.CourseCode);
-            var cn = unitofWork.courses.UniqueCourseName(courseDto.CourseName);
+            var course = await unitofWork.courses.GetAsync(courseDto.Id);
+            bool cc=false, cn=false;
+            if (course.CourseCode!=courseDto.CourseCode)
+            {
+             cc = unitofWork.courses.UniqueCourseCode(courseDto.CourseCode);
+
+            }
+            if (course.CourseName != courseDto.CourseName)
+            {
+                 cn = unitofWork.courses.UniqueCourseName(courseDto.CourseName);
+            }
             if (cc)
             {
                 return BadRequest("Course Code Already Added");

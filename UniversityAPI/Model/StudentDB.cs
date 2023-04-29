@@ -113,6 +113,7 @@ namespace UniversityAPI.Model
                 .HasOne(_ => _.Day)
                 .WithMany(c => c.AllocateClass)
                 .HasForeignKey(a => a.DayId);
+            builder.Entity<AllocateClass>().Property(c => c.Action).HasDefaultValue(true);
             base.OnModelCreating( builder);
         }
     } 

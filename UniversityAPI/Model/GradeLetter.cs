@@ -9,6 +9,7 @@ namespace UniversityAPI.Model
     {
         public int Id { get; set; }
         public string GradeLetterMarkes { get; set; }
+        public double? GradePoint { get; set; }
         public List<StudentResult> StudentResult { get; set; }
 
     }

@@ -12,6 +12,7 @@
         IStudentResultRepository studentResult { get; }
         IGradeLetterRepository gradeLetters{ get; }
         IDesignationRepository designation { get; }
+        IClassScheduleRepository classSchedule { get; }
         Task SaveAsync();
     }
 }

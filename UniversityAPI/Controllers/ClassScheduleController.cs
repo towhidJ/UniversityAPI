@@ -22,9 +22,11 @@ namespace UniversityAPI.Controllers
             _mapper = mapper;
         }
 
-        public async Task<IActionResult> Index()
+        [HttpGet]
+        public async Task<IActionResult> Index(int depId)
         {
-            return Ok("");
+            var result = await unitofWork.classSchedule.GetSchedule(depId);
+            return Ok(result);
         }
     }
 }

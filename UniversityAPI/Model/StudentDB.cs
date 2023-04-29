@@ -29,6 +29,7 @@ namespace UniversityAPI.Model
 
         public DbSet<StudentResultViewModel> StudentResultViews { get; set; }
         public DbSet<ShowAssignView> StudentAssignView { get; set; }
+        public DbSet<ClassScheduleView> ClassScheduleView { get; set; }
 
         
 
@@ -41,6 +42,7 @@ namespace UniversityAPI.Model
 
             builder.Entity<StudentResultViewModel>().HasNoKey().ToView("StudentResultView");
             builder.Entity<ShowAssignView>().HasNoKey().ToView("ShowAssignView");
+            builder.Entity<ClassScheduleView>().HasNoKey().ToView("ClassScheduleView");
             builder.Entity<StudentTB>()
                 .HasOne(_ => _.DepartmentTB)
                 .WithMany(a => a.StudentTB)

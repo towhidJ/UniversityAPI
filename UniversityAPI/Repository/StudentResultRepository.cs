@@ -45,9 +45,9 @@ namespace UniversityAPI.Repository
         {
             
 
-            var result = _db.StudentResultViews.FromSqlRaw($"Student_Result {studentId}" );
+            var result = _db.StudentResultViews.FromSqlRaw($"SelectResultWithGPA {studentId}" ).ToList();
 
-            return result.ToList();
+            return result;
         }
     }
 }

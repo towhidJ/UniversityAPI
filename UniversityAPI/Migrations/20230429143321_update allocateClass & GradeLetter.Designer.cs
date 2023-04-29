@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UniversityAPI.Model;
 
@@ -11,9 +12,10 @@ using UniversityAPI.Model;
 namespace UniversityAPI.Migrations
 {
     [DbContext(typeof(StudentDB))]
-    partial class StudentDBModelSnapshot : ModelSnapshot
+    [Migration("20230429143321_update allocateClass & GradeLetter")]
+    partial class updateallocateClassGradeLetter
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -438,8 +440,8 @@ namespace UniversityAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("GradePoint")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<double?>("GradePoint")
+                        .HasColumnType("float");
 
                     b.HasKey("Id");
 
@@ -638,9 +640,6 @@ namespace UniversityAPI.Migrations
 
                     b.Property<float>("Credit")
                         .HasColumnType("real");
-
-                    b.Property<string>("GPA")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Grade")
                         .IsRequired()

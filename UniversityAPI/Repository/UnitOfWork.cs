@@ -17,6 +17,8 @@ namespace UniversityAPI.Repository
         public IGradeLetterRepository gradeLetters{ get; }
         public IDesignationRepository designation { get; }
         public IClassScheduleRepository classSchedule { get; }
+        public IDayRepository day { get; }
+        public IRoomRepository room { get; }
 
 
         public UnitOfWork(StudentDB db)
@@ -33,6 +35,8 @@ namespace UniversityAPI.Repository
             gradeLetters = new GradeLetterRepository(_db);
             designation = new DesignationRepository(_db);
             classSchedule = new ClassScheduleRepository(_db);
+            day= new DayRepository(_db);
+            room= new RoomRepository(_db);
         }
         public async Task SaveAsync()
         {

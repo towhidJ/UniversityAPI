@@ -61,11 +61,13 @@ namespace UniversityAPI.Repository
                 return "This Time is not Available";
             }
             bool isTimeClassAllocateValid = IsTimeClassAllocateValid(classSchedule.DayId, classSchedule.RoomId, classSchedule.FromTime, classSchedule.ToTime);
-            if (isTimeClassAllocateValid == false)
+            if (isTimeClassAllocateValid == true)
             {
-                await DbSet.AddAsync(classSchedule);
-            }
             return "The Schedule Time Class Already Exists";
+
+            }
+            await DbSet.AddAsync(classSchedule);
+            return "Class Schedule Add Success";
         }
 
 
@@ -95,6 +97,41 @@ namespace UniversityAPI.Repository
                                       where ac.RoomId==roomId && ac.DayId==dayId && ac.Action==true
                                           select ac).ToList();
             return allocateClassRooms;
+        }
+
+
+        //<-------Unallocated Class------->//
+
+        public async Task<string> UnallocatedRoom()
+        {
+            var isExists = await isActionExist();
+            if (isExists)
+            {
+               await UpdateClass();
+               return "Class Schedule Unallocated Success";
+            }
+
+            return "Class Schedule already unallocated";
+        }
+
+        private async Task<bool> UpdateClass()
+        {
+            var schedule = _db.AllocateClassTb.Where(c=>c.Action==true).ToList();
+            schedule.ForEach(c => c.Action = false);
+            await _db.SaveChangesAsync();
+            return true;
+        }
+
+        private async Task<bool> isActionExist()
+        {
+            var query = _db.AllocateClassTb.Where(c => c.Action == true).ToList();
+
+            if (query.Count >0)
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

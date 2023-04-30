@@ -13,6 +13,8 @@
         IGradeLetterRepository gradeLetters{ get; }
         IDesignationRepository designation { get; }
         IClassScheduleRepository classSchedule { get; }
+        IDayRepository day { get; }
+        IRoomRepository room { get; }
         Task SaveAsync();
     }
 }

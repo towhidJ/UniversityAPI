@@ -14,6 +14,7 @@ namespace UniversityAPI.Dtos
             CreateMap<TeacherDto, Teacher>();
             CreateMap<EnrollCourseDto, EnrollCourse>();
             CreateMap<StudentResultDto, StudentResult>();
+            CreateMap<AllocateClassDto, AllocateClass>();
             CreateMap<CourseAssignTeacherDto,CourseAssignTeacher>()
                 .ForMember(c=>c.Id,o=>o.MapFrom(x=>x.Id))
 

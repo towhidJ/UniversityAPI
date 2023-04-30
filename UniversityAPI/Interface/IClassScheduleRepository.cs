@@ -7,5 +7,6 @@ namespace UniversityAPI.Interface
     {
         public Task<string>AddClassSchedule(AllocateClass classSchedule);
         public Task<List<ClassScheduleViewModel>> GetSchedule(int depId);
+        public Task<string> UnallocatedRoom();
     }
 }

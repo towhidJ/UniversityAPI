@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using UniversityAPI.Dtos;
 using UniversityAPI.Interface;
 using UniversityAPI.Model;
 using UniversityAPI.Repository;
@@ -28,5 +29,23 @@ namespace UniversityAPI.Controllers
             var result = await unitofWork.classSchedule.GetSchedule(depId);
             return Ok(result);
         }
+
+        [HttpPost("addclass")]
+        public async Task<IActionResult> AddClass(AllocateClassDto classSchedule)
+        {
+            var newClass = _mapper.Map<AllocateClass>(classSchedule);
+            var res = await unitofWork.classSchedule.AddClassSchedule(newClass);
+            await unitofWork.SaveAsync();
+            return Ok(res);
+        }
+
+        [HttpGet("unallocatedClass")]
+        public async Task<IActionResult> UnAllocatedClass()
+        {
+            var res = await unitofWork.classSchedule.UnallocatedRoom();
+            return Ok(res);
+        }
+
+
     }
 }

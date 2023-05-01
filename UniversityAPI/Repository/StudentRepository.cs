@@ -19,7 +19,7 @@ namespace UniversityAPI.Repository
 
         public override async Task<StudentTB> GetAsync(int id)
         {
-            return await DbSet.FirstOrDefaultAsync(x => x.Id == id);
+            return await DbSet.Include(c=>c.DepartmentTB).FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public override async Task<bool> AddEntity(StudentTB studentTB)

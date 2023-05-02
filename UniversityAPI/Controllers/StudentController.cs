@@ -1,5 +1,7 @@
-﻿using System.Diagnostics.Tracing;
+﻿using System.Data;
+using System.Diagnostics.Tracing;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using UniversityAPI.Dtos;
@@ -13,6 +15,7 @@ namespace UniversityAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "admin")]
     public class StudentController : ControllerBase
     {
 
@@ -96,19 +99,19 @@ namespace UniversityAPI.Controllers
             if (countString.Length == 1)
             {
                 string newNumber = "00" + countString;
-                string RegistrationNo = departmentCode + "-" + year.ToString() + "-" + newNumber;
+                string RegistrationNo = departmentCode  + year.ToString()  + newNumber;
                 return RegistrationNo;
             }
             else if (countString.Length == 2)
             {
                 string newNumber = "0" + countString;
-                string RegistrationNo = departmentCode + "-" + year.ToString() + "-" + newNumber;
+                string RegistrationNo = departmentCode + year.ToString()  + newNumber;
                 return RegistrationNo;
             }
             else
             {
                 string newNumber = countString;
-                string RegistrationNo = departmentCode + "-" + year.ToString() + "-" + newNumber;
+                string RegistrationNo = departmentCode + year.ToString() +  newNumber;
                 return RegistrationNo;
             }
         }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -26,12 +27,14 @@ namespace UniversityAPI.Controllers
             _mapper = mapper;
         }
         [HttpGet]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> GetAll()
         {
             var _data = await unitofWork.courses.GetAllAsync();
             return Ok(_data);
         }
         [HttpPost("create")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Create(CourseDto course)
         {
             var newCourse = _mapper.Map<Course>(course);
@@ -52,6 +55,7 @@ namespace UniversityAPI.Controllers
             return Ok(_data);
         }
         [HttpPut("update")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Update(CourseDto courseDto)
         {
             var modifiedCourse = _mapper.Map<Course>(courseDto);
@@ -81,6 +85,7 @@ namespace UniversityAPI.Controllers
             return Ok(_data);
         }
         [HttpDelete("remove/{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Remove([FromRoute] int id)
         {
             var _data = await this.unitofWork.courses.DeleteEntity(id);
@@ -89,6 +94,7 @@ namespace UniversityAPI.Controllers
         }
 
         [HttpGet("getByDepId")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> GetCourseByDepartmentId(int departmentId)
         {
 
@@ -98,6 +104,7 @@ namespace UniversityAPI.Controllers
         }
 
         [HttpGet("getbyid/{id}")]
+        [Authorize(Roles = "admin")]
         public  async Task<IActionResult> getById(int id)
         {
 

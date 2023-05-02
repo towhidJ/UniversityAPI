@@ -58,6 +58,14 @@ namespace UniversityAPI.Controllers
             {
                 await roleManager.CreateAsync(new IdentityRole(UserRole.Admin));
             }
+            if (!await roleManager.RoleExistsAsync(UserRole.Student))
+            {
+                await roleManager.CreateAsync(new IdentityRole(UserRole.Student));
+            }
+            if (!await roleManager.RoleExistsAsync(UserRole.Teacher))
+            {
+                await roleManager.CreateAsync(new IdentityRole(UserRole.Teacher));
+            }
             if (!await roleManager.RoleExistsAsync(UserRole.User))
             {
                 await roleManager.CreateAsync(new IdentityRole(UserRole.User));
@@ -90,6 +98,7 @@ namespace UniversityAPI.Controllers
                 {
                     token,
                     User=user.UserName,
+                    Id = user.Id,
                     roles = role
                 });
             }
@@ -128,12 +137,22 @@ namespace UniversityAPI.Controllers
         private async Task<ApplicationUser> Authenticate(LoginModel login)
         {
             var currentUser = await userManager.FindByNameAsync(login.UserName);
+            var cUser = await userManager.FindByEmailAsync(login.UserName);
             if (currentUser != null && await userManager.CheckPasswordAsync(currentUser, login.Password))
             {
                 return currentUser;
             }
 
-            return null;
+            else if (cUser != null && await userManager.CheckPasswordAsync(cUser, login.Password))
+            {
+                return cUser;
+            }
+            else
+            { 
+                return null;
+
+            }
+
         }
 
 

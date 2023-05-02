@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 using UniversityAPI.Dtos;
 using UniversityAPI.Interface;
 using UniversityAPI.Model;
@@ -9,6 +11,7 @@ namespace UniversityAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "admin")]
     public class CourseAssignToTeacherController : ControllerBase
     {
         public readonly IUnitOfWork unitofWork;

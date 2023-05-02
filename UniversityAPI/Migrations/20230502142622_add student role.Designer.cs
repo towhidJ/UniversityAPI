@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UniversityAPI.Model;
 
@@ -11,9 +12,10 @@ using UniversityAPI.Model;
 namespace UniversityAPI.Migrations
 {
     [DbContext(typeof(StudentDB))]
-    partial class StudentDBModelSnapshot : ModelSnapshot
+    [Migration("20230502142622_add student role")]
+    partial class addstudentrole
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -538,9 +540,14 @@ namespace UniversityAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("DepartmentId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("StudentTb");
                 });
@@ -581,11 +588,16 @@ namespace UniversityAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("DepartmentId");
 
                     b.HasIndex("DesignationId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("TeacherTb");
                 });
@@ -872,7 +884,14 @@ namespace UniversityAPI.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("UniversityAPI.Authentication.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("DepartmentTB");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("UniversityAPI.Model.Teacher", b =>
@@ -889,9 +908,16 @@ namespace UniversityAPI.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("UniversityAPI.Authentication.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("DepartmentTB");
 
                     b.Navigation("Designation");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("UniversityAPI.Model.Course", b =>
